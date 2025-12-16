@@ -3,7 +3,7 @@ import { makeMaze, bfsNextStep, resolveMazeCollision } from "./maze.js";
 import { makeUI } from "./ui.js";
 import { makeAudio } from "./audio.js";
 import { loadStory, saveStory, resetStory, markNoteRead, noteAlreadyRead, applyChoice, computeEnding, endingText } from "./story.js";
-import { buildWorldExtras } from "./worldgen.js";
+import { buildWorldExtras } from "./worldgen.js?v=3";
 import { spawnNPCs, updateNPCs, npcInteractPayload } from "./npcs.js";
 
 const ui = makeUI();

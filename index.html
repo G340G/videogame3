@@ -1,1 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RAIN/FOREST: YOU ARE WATCHED</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="wrap">
+    <canvas id="fx"></canvas>
+
+    <div id="hud">
+      <div id="topbar">
+        <div id="left">
+          <div class="pill" id="levelPill">LEVEL 1/4</div>
+          <div class="pill" id="relicPill">RELICS 0/4</div>
+          <div class="pill" id="missionPill">MISSION: FIND THE RELIC</div>
+        </div>
+        <div id="right">
+          <div class="pill warn" id="dissonancePill">DISSONANCE 0%</div>
+        </div>
+      </div>
+
+      <div id="centerHint" class="hint">
+        Click to enter the forest. (WASD move, SHIFT sprint, E interact, Q journal)
+      </div>
+
+      <div id="journal" class="panel hidden">
+        <div class="panelHeader">
+          <div class="title">JOURNAL</div>
+          <button id="closeJournal" class="btn">Close</button>
+        </div>
+        <div id="journalBody" class="panelBody"></div>
+      </div>
+
+      <div id="modal" class="panel hidden">
+        <div class="panelHeader">
+          <div class="title" id="modalTitle">NOTE</div>
+          <button id="closeModal" class="btn">Close</button>
+        </div>
+        <div id="modalBody" class="panelBody"></div>
+        <div id="modalChoices" class="choices"></div>
+      </div>
+
+      <div id="death" class="panel hidden">
+        <div class="panelHeader">
+          <div class="title">YOU WERE FOUND</div>
+        </div>
+        <div class="panelBody">
+          <p>You feel the polite pressure of a hand that isn’t there.</p>
+          <p>Daylight keeps shining, as if nothing happened.</p>
+          <button id="retry" class="btn big">Retry Level</button>
+        </div>
+      </div>
+
+      <div id="ending" class="panel hidden">
+        <div class="panelHeader">
+          <div class="title">ENDING</div>
+        </div>
+        <div class="panelBody" id="endingBody"></div>
+        <div class="choices">
+          <button id="restartGame" class="btn big">Restart</button>
+        </div>
+      </div>
+
+      <div id="footer">
+        <span class="tiny">PS1-style low-res render • procedural audio • second-person narrative</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
 

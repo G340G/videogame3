@@ -107,4 +107,119 @@ export function npcInteractPayload(npc, level, story){
       title: "A PERSON WITH DRY HANDS IN THE RAIN",
       html: `${lead}
         <p>They stand too still, like a prop nobody moved.</p>
-        <p><b>“You are in second-person because you
+        <p><b>“You are in second-person because you are being instructed.”</b></p>
+        <p style="color:#ffffff77;">${hint}</p>`,
+      choices: [
+        { label: "Answer: 'I obey' (entity learns you faster)", onPick: ()=> ({ effect:"OBEY", delta:{ obsession:+12 }, learn:true }) },
+        { label: "Answer: 'I refuse' (gate later, but safer)", onPick: ()=> ({ effect:"REFUSE", delta:{ guilt:+6 }, delay:true }) },
+      ]
+    };
+  }
+
+  // default: Prophet
+  return {
+    title: "A PERSON WHO POINTS AT NOTHING",
+    html: `${lead}
+      <p>They whisper your footsteps back to you, perfectly.</p>
+      <p><b>“The houses aren’t shelter. They’re receipts.”</b></p>
+      <p style="color:#ffffff77;">${hint}</p>`,
+    choices: [
+      { label: "Ask: 'Where is it?'", onPick: ()=> ({ effect:"HINT", delta:{}, hint:true }) },
+      { label: "Leave them to their weather", onPick: ()=> ({ effect:"LEAVE", delta:{}, hint:false }) },
+    ]
+  };
+}
+
+export function makeNPCMesh(rng, archetype){
+  const g = new THREE.Group();
+
+  // low poly body
+  const body = new THREE.Mesh(
+    new THREE.ConeGeometry(0.35, 1.4, 6),
+    new THREE.MeshLambertMaterial({ color: archetype.color })
+  );
+  body.position.y = 0.7;
+  g.add(body);
+
+  // head
+  const head = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(0.18, 0),
+    new THREE.MeshLambertMaterial({ color: archetype.head })
+  );
+  head.position.y = 1.35;
+  g.add(head);
+
+  // “wrong face”
+  const face = new THREE.Mesh(
+    new THREE.BoxGeometry(0.10, 0.06, 0.02),
+    new THREE.MeshBasicMaterial({ color: archetype.face })
+  );
+  face.position.set(0, 1.34, 0.16);
+  g.add(face);
+
+  // arms (janky)
+  const armGeo = new THREE.BoxGeometry(0.06, 0.5, 0.06);
+  const armMat = new THREE.MeshLambertMaterial({ color: archetype.color });
+  const a1 = new THREE.Mesh(armGeo, armMat);
+  const a2 = new THREE.Mesh(armGeo, armMat);
+  a1.position.set(0.28, 0.85, 0);
+  a2.position.set(-0.28, 0.85, 0);
+  a1.rotation.z = 0.6 + rng()*0.3;
+  a2.rotation.z = -0.6 - rng()*0.3;
+  g.add(a1); g.add(a2);
+
+  g.userData.type = "npc";
+  g.userData.archetype = archetype;
+
+  return g;
+}
+
+function pickArchetype(rng, level, i){
+  const kinds = ["PROPHET","SINGER","BUTCHER","NURSE"];
+  const kind = kinds[(rng()*kinds.length)|0];
+
+  // palette per kind
+  if(kind==="BUTCHER") return { kind, color:0x3a2a2a, head:0x6e5c52, face:0xffe2d0 };
+  if(kind==="SINGER") return { kind, color:0x27313a, head:0x5c6570, face:0xe9e2d8 };
+  if(kind==="NURSE")  return { kind, color:0x1f242c, head:0x6a6e75, face:0xffffff };
+  return { kind:"PROPHET", color:0x1f2a24, head:0x5a5f66, face:0xdad2c6 };
+}
+
+function directionHint(a, level){
+  // deliberately unreliable hints (experimental)
+  const base = [
+    "They gesture: “Closer to where the rain sounds thinner.”",
+    "They gesture: “Toward the candles. Toward pretending.”",
+    "They gesture: “Away from the widest path.”",
+    "They gesture: “Find a house. The relic likes indoor weather.”",
+  ];
+  let line = base[(hash01(a.kind+level)*base.length)|0];
+  if(a.kind === "PROPHET") line += " (It could be true. It could be rehearsal.)";
+  return line;
+}
+
+function cellCenter(x,y,cellSize){
+  return { x: x*cellSize + cellSize/2, z: y*cellSize + cellSize/2 };
+}
+
+function getCell(pos, cellSize, maze){
+  const x = clamp(Math.floor(pos.x / cellSize), 0, maze.w-1);
+  const y = clamp(Math.floor(pos.z / cellSize), 0, maze.h-1);
+  return {x,y};
+}
+
+function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+function hash01(s){
+  // deterministic float 0..1
+  let h = 2166136261;
+  for(let i=0;i<s.length;i++){
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return ((h>>>0) % 100000) / 100000;
+}
+function rngish(seed, t){
+  // small pseudo-rand from seed + time
+  const x = Math.sin((hash01(seed)*999 + t)*12.9898)*43758.5453;
+  return x - Math.floor(x);
+}

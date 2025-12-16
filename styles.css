@@ -1,1 +1,170 @@
+:root{
+  --bg:#050607;
+  --fg:#e6e6e6;
+  --muted:#b9b9b9;
+  --panel:#0c0f12cc;
+  --stroke:#ffffff26;
+  --warn:#ffddb1;
+  --bad:#ffb1b1;
+}
+
+html,body{
+  margin:0;
+  height:100%;
+  background:var(--bg);
+  color:var(--fg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  overflow:hidden;
+}
+
+#wrap{
+  position:relative;
+  width:100%;
+  height:100%;
+}
+
+canvas{
+  display:block;
+}
+
+#fx{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  mix-blend-mode: screen;
+  opacity:0.55;
+}
+
+#hud{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+#topbar{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px;
+}
+
+#left, #right{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.pill{
+  pointer-events:none;
+  padding:6px 10px;
+  background: #0a0c0fbb;
+  border:1px solid var(--stroke);
+  border-radius:999px;
+  font-size:12px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+}
+
+.pill.warn{ color:var(--warn); }
+.pill.bad{ color:var(--bad); }
+
+.hint{
+  position:absolute;
+  left:50%;
+  top:55%;
+  transform:translate(-50%,-50%);
+  padding:10px 12px;
+  background: #0a0c0fdd;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  font-size:13px;
+  color:var(--muted);
+  max-width:min(720px,92vw);
+  text-align:center;
+}
+
+.panel{
+  pointer-events:auto;
+  position:absolute;
+  left:50%;
+  top:52%;
+  transform:translate(-50%,-50%);
+  width:min(760px, 94vw);
+  background:var(--panel);
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  box-shadow:0 12px 50px #00000099;
+  overflow:hidden;
+}
+
+.panelHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 14px;
+  border-bottom:1px solid var(--stroke);
+}
+
+.title{
+  font-weight:700;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  font-size:13px;
+}
+
+.panelBody{
+  padding:14px;
+  color:var(--fg);
+  font-size:14px;
+  line-height:1.55;
+}
+
+.panelBody p{ margin:0 0 10px 0; color:var(--muted); }
+
+.choices{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:14px;
+  border-top:1px solid var(--stroke);
+}
+
+.btn{
+  pointer-events:auto;
+  background:#12161bcc;
+  border:1px solid var(--stroke);
+  color:var(--fg);
+  border-radius:12px;
+  padding:9px 12px;
+  cursor:pointer;
+  font:inherit;
+  transition:transform .05s ease, background .15s ease;
+}
+
+.btn:hover{ background:#171d24cc; }
+.btn:active{ transform:translateY(1px); }
+
+.btn.big{
+  padding:12px 14px;
+  font-size:14px;
+}
+
+.hidden{ display:none; }
+
+#footer{
+  position:absolute;
+  left:10px;
+  bottom:10px;
+  color:#ffffff55;
+  font-size:11px;
+  letter-spacing:0.04em;
+}
+
+.tiny{ opacity:0.9; }
+
+/* PS1 vibe: pixelated upscaling for the main renderer canvas */
+#wrap > canvas:not(#fx){
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
 
